@@ -8,8 +8,8 @@ from open_seq2seq.parts.rnns.weight_drop import WeightDropLayerNormBasicLSTMCell
 from open_seq2seq.losses import BasicSequenceLoss
 from open_seq2seq.optimizers.lr_policies import fixed_lr
 
-data_root = "[REPLACE THIS TO THE PATH WITH YOUR WikiText-2-raw DATA]"
-processed_data_folder = 'wkt2-processed-data'
+data_root = "/home/ubuntu/wkt2/wikitext-2-raw"
+processed_data_folder = '/home/ubuntu/wkt2/wkt2-processed-data'
 
 base_model = LSTMLM
 bptt = 96
@@ -18,7 +18,7 @@ steps = 40
 base_params = {
   "restore_best_checkpoint": True,
   "use_horovod": True,
-  "num_gpus": 2,
+  "num_gpus": 8,
 
   "batch_size_per_gpu": 160,
   "num_epochs": 1500,

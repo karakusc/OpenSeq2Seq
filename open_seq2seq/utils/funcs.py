@@ -140,6 +140,7 @@ def train(train_model, eval_model=None, debug_port=None):
       log_step_count_steps=train_model.params['save_summaries_steps'],
       stop_grace_period_secs=300,
       hooks=hooks)
+
   step = 0
   num_bench_updates = 0
   while True:
