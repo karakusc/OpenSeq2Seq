@@ -1,0 +1,8 @@
+rm -rf /home/ubuntu/git/OpenSeq2Seq/LSTM-WKT2-FP32
+mpirun -np 16 -H qs1:8,qs2:8 \
+    -bind-to none -map-by slot \
+    -x NCCL_DEBUG=INFO -x LD_LIBRARY_PATH -x PATH \
+    -mca pml ob1 -mca btl ^openib --mca btl_tcp_if_exclude docker0,lo \
+    -x NCCL_SOCKET_IFNAME=ens3 \
+    python /home/ubuntu/git/OpenSeq2Seq/run.py --config_file=example_configs/lm/lstm-wkt2-fp32.py --mode=train_eval --use_horovod=True --enable_logs
+
