@@ -42,9 +42,9 @@ class BroadcastGlobalVariablesHook(tf.train.SessionRunHook):
       for var in tf.global_variables():
         if var.dtype.base_dtype == tf.float16:
           ops.append(tf.assign(var, tf.cast(broadcast(tf.cast(var, tf.float32),
-                                                      root_rank), tf.float16)))
+                                                      root_rank, global_op=True), tf.float16)))
         else:
-          ops.append(tf.assign(var, broadcast(var, root_rank)))
+          ops.append(tf.assign(var, broadcast(var, root_rank, global_op=True)))
       return tf.group(*ops)
 
     if not self.bcast_op or self.bcast_op.graph != tf.get_default_graph():

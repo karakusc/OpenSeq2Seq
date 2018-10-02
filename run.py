@@ -11,6 +11,18 @@ from open_seq2seq.utils.utils import deco_print, get_base_config, check_logdir,\
                                      create_logdir, create_model, check_base_model_logdir
 from open_seq2seq.utils import train, infer, evaluate
 
+from mpi4py import MPI
+def get_subcluster():
+  comm = MPI.COMM_WORLD
+  local_comm = comm.Split_type(MPI.COMM_TYPE_SHARED, comm.Get_rank())
+  local_size = local_comm.Get_size()
+
+  group_size = local_size//2
+  subcluster_left = (comm.rank // group_size) * group_size
+
+  subcluster_right = subcluster_left + group_size
+  return [i for i in range(subcluster_left, subcluster_right)]
+
 def main():
   # Parse args and create config
   args, base_config, base_model, config_module = get_base_config(sys.argv[1:])
@@ -36,7 +48,8 @@ def main():
   # Initilize Horovod
   if base_config['use_horovod']:
     import horovod.tensorflow as hvd
-    hvd.init()
+    #hvd.init()
+    hvd.init(get_subcluster(), keep_global=True)
     if hvd.rank() == 0:
       deco_print("Using horovod")
   else:

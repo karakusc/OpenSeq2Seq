@@ -6,7 +6,9 @@ from open_seq2seq.decoders import FakeDecoder
 from open_seq2seq.data import WKTDataLayer
 from open_seq2seq.parts.rnns.weight_drop import WeightDropLayerNormBasicLSTMCell
 from open_seq2seq.losses import BasicSequenceLoss
-from open_seq2seq.optimizers.lr_policies import fixed_lr
+#from open_seq2seq.optimizers.lr_policies import fixed_lr
+
+from open_seq2seq.optimizers.lr_policies import poly_decay
 
 data_root = "/home/ubuntu/wkt2/wikitext-2-raw"
 processed_data_folder = '/home/ubuntu/wkt2/wkt2-processed-data'
@@ -30,13 +32,17 @@ base_params = {
   "processed_data_folder": processed_data_folder,
   "eval_steps": steps * 2,
 
-  "optimizer": "Adam",
+  "optimizer": "SGD",
   "optimizer_params": {},
-
-  "lr_policy": fixed_lr,
+  "lr_policy": poly_decay,
   "lr_policy_params": {
-    "learning_rate": 4e-4
+      "learning_rate": 0.1,
+      "power": 2,
   },
+ # "lr_policy": fixed_lr,
+ # "lr_policy_params": {
+ #   "learning_rate": 4e-4
+ # },
   "summaries": ['learning_rate', 'variables', 'gradients', 
                 'variable_norm', 'gradient_norm', 'global_gradient_norm'],
   # "max_grad_norm": 0.25,

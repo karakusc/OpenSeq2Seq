@@ -155,11 +155,14 @@ def train(train_model, eval_model=None, debug_port=None):
       if step % iter_size == 0:
         if step >= bench_start:
           num_bench_updates += 1
+        import horovod.tensorflow as hvd
         fetches_vals = sess.run(fetches, feed_dict)
       else:
         # necessary to skip "no-update" steps when iter_size > 1
         def run_with_no_hooks(step_context):
           return step_context.session.run(fetches, feed_dict)
+
+        import horovod.tensorflow as hvd
         fetches_vals = sess.run_step_fn(run_with_no_hooks)
     except tf.errors.OutOfRangeError:
       break
